@@ -3,17 +3,18 @@ import ReactDom from 'react-dom';
 import { World, Foo } from "./World";
 import expect from 'expect';
 import {counter, newCounter, todoApp} from "./reducers";
-import {createStore} from 'redux';
+import {createStore, combineReducers} from 'redux';
 
-const store = createStore(counter);
-const todoStore = createStore(todoApp);
+const store = createStore(
+    todoApp
+);
 
 var Counter = ({ state, onIncrement, onDecrement }) => {
     return (
         <div>
-            {state} <br/>
-            <button onClick={onIncrement} >+</button>
-            <button onClick={onDecrement} >-</button>
+            {state.counter} <br/>
+            <button onClick={ onIncrement } > + </button>
+            <button onClick={onDecrement} > - </button>
         </div>
     )
 }
@@ -21,20 +22,20 @@ var Counter = ({ state, onIncrement, onDecrement }) => {
 var TodoList = ({state}) => {
     return (
         <div>
-            list
+            list blah
         </div>
     )
 }
 
 var App = ({}) => {
-    return(<div>
+    return (<div>
         <Counter
             state={store.getState() }
             onIncrement={onIncrement}
             onDecrement={onDecrement}
             />
         <br/>
-        <TodoList state={todoStore} />
+        <TodoList state={store} />
     </div>
     )
 }
@@ -52,17 +53,19 @@ var render = () => {
     );
 }
 store.subscribe(render);
-todoStore.subscribe(render);
 render();
 
 store.dispatch({ type: 'INCREMENT' })
 store.dispatch({ type: 'INCREMENT' })
-console.log(todoStore.getState());
-todoStore.dispatch(
+store.dispatch(
     {
         type: 'ADD_TODO',
         text: 'foo bar',
         id: 1
     }
 )
-console.log(todoStore.getState());
+store.dispatch({
+    type: 'SET_VISIBILITY_FILTER',
+    filter: 'SHOW_ALL'
+})
+console.log(store.getState());

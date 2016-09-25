@@ -10,7 +10,7 @@ const path = require('path');
 const APP = path.join(__dirname, 'app');
 const BUILD = path.join(__dirname, 'build');
 const TEMPLATE = path.join(__dirname, 'app/templates/index_default.html');
-const HOST = process.env.HOST || '127.0.0.1';
+const HOST = process.env.HOST || '0.0.0.0';
 const PORT = process.env.PORT || 8081;
 
 module.exports = {
