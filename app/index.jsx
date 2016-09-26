@@ -1,129 +1,148 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import { World, Foo } from "./World";
-import expect from 'expect';
-import {counter, newCounter, todoApp} from "./reducers";
+import {todoApp} from "./reducers";
 import {createStore, combineReducers} from 'redux';
-const { Component } = React;
+const {Component} = React;
 let nextTodoId = 0;
 const store = createStore(
     todoApp
 );
 
-var Counter = ({ state, onIncrement, onDecrement }) => {
-    return (
-        <div>
-            {state.counter} <br/>
-            <button onClick={ onIncrement } > + </button>
-            <button onClick={onDecrement} > - </button>
-        </div>
-    )
-}
 
-const FilterLink = ({ filter, children, currentFilter }) => {
+const Todo = ({
+    onClick, completed, text
+}) => (
+    <li style={{
+        textDecoration: completed ? 'line-through' : 'none'
+    }} onClick={val => {
+        onClick()
+    } }>
+        {text}
+    </li>
+);
+
+const TodoList = ({
+    todos, onClickTodo
+}) => (
+    <ul>
+        {todos.map(todo =>
+            <Todo
+                key={todo.id}
+                {...todo}
+                onClick={() => onClickTodo(todo.id)}
+            />
+        )}
+    </ul>
+);
+
+const FilterLink = ({filter, children, currentFilter, onClickFilter}) => {
     if (filter === currentFilter) {
         return <span>{children}</span>;
     }
     return (
         <a href="#" onClick={ e => {
             e.preventDefault();
-            store.dispatch({
-                type: 'SET_VISIBILITY_FILTER',
-                filter
-            })
+            onClickFilter(filter)
         } }>{children}</a>
     )
-}
+};
+
+const AddTodo = ({onClick}) => {
+    let input;
+    return (
+        <div>
+            <input ref={node => {
+                input = node;
+            }}/>
+            <button onClick={() => {
+                onClick(input.value)
+            } }>Add
+            </button>
+        </div>
+    )
+};
 
 const getVisibleTodos = (todos, filter) => {
     switch (filter) {
         case 'SHOW_ACTIVE':
             return todos.filter(
-                t => t.completed 
+                t => t.completed
             );
         case 'SHOW_COMPLETED':
-            return todos.filter(t => ! t.completed)
-        default: return todos;
+            return todos.filter(t => !t.completed)
+        default:
+            return todos;
     }
-}
+};
 
-class App extends Component {
-    render() {
-        const {
-            todos, visibilityFilter
-        } = this.props;
-        const visibleTodos = getVisibleTodos(
-            todos,
-            visibilityFilter
-        );
-        return (
-            <div>
-                <p>
-                    <FilterLink
-                        filter='SHOW_ALL'
-                        currentFilter={visibilityFilter}
-                        > All </FilterLink>
-                    <FilterLink
-                        filter='SHOW_ACTIVE'
-                        currentFilter={visibilityFilter}
-                        > Active </FilterLink>
-                    <FilterLink
-                        filter='SHOW_COMPLETED'
-                        currentFilter={visibilityFilter}
-                        > Completed </FilterLink>
-                </p>
-                <input ref={node => {
-                    this.input = node;
-                } }/>
-                <button onClick={() => {
+const Header = ({visibilityFilter, onClickFilter})=> {
+    return (
+        <p>
+            <FilterLink
+                filter='SHOW_ALL'
+                currentFilter={visibilityFilter}
+                onClickFilter={onClickFilter}
+            > All </FilterLink>
+            <FilterLink
+                filter='SHOW_ACTIVE'
+                currentFilter={visibilityFilter}
+                onClickFilter={onClickFilter}
+            > Active </FilterLink>
+            <FilterLink
+                filter='SHOW_COMPLETED'
+                currentFilter={visibilityFilter}
+                onClickFilter={onClickFilter}
+            > Completed </FilterLink>
+        </p>
+    )
+};
+
+const App = ({
+    visibilityFilter, todos
+})=> {
+    return (
+        <div>
+            <Header
+                visibilityFilter={visibilityFilter}
+                onClickFilter={filter=> {
                     store.dispatch({
-                        type: 'ADD_TODO',
-                        text: this.input.value,
-                        id: nextTodoId++
-                    });
-                } }>Add</button>
+                        type: 'SET_VISIBILITY_FILTER',
+                        filter
+                    })
+                }}/>
 
-                <ul>
-                    {visibleTodos.map(todo =>
-                        <li style={{
-                            textDecoration: todo.completed ? 'line-through' : 'none'
-                        }} key={todo.id} onClick={val => {
-                            store.dispatch({
-                                type: 'TOGGLE_TODO',
-                                id: todo.id
-                            })
-                            console.log(store.getState())
-                        } }>
-                            {todo.text}
-                        </li>
-                    ) }
-                </ul>
+            <AddTodo onClick={value=> {
+                store.dispatch({
+                    type: 'ADD_TODO',
+                    text: value,
+                    id: nextTodoId++
+                })
+            }}/>
 
-            </div>
-        )
+            <TodoList
+                todos={getVisibleTodos(
+                    todos,
+                    visibilityFilter
+                )}
+                onClickTodo={id => {
+                    store.dispatch({
+                        type: 'TOGGLE_TODO',
+                        id: id
+                    })
+                }}/>
+        </div>
+    )
 
-    }
-}
+};
 
-const onIncrement = () => {
-    store.dispatch({ type: 'INCREMENT' });
-}
-const onDecrement = () => {
-    store.dispatch({ type: 'DECREMENT' });
-}
+
 var render = () => {
     ReactDom.render(
-        <App {...store.getState()}/>,
+        <App {...store.getState()} />,
         document.getElementById('app')
     );
-}
+};
 store.subscribe(render);
 render();
 
-store.dispatch({ type: 'INCREMENT' })
-store.dispatch({ type: 'INCREMENT' })
-store.dispatch({
-    type: 'SET_VISIBILITY_FILTER',
-    filter: 'SHOW_ALL'
-})
 window.store = store;
