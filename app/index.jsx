@@ -35,14 +35,16 @@ const TodoList = ({
     </ul>
 );
 
-const FilterLink = ({filter, children, currentFilter, onClickFilter}) => {
-    if (filter === currentFilter) {
+const Link = ({
+    active, onClick, children
+}) => {
+    if (active) {
         return <span>{children}</span>;
     }
     return (
         <a href="#" onClick={ e => {
             e.preventDefault();
-            onClickFilter(filter)
+            onClick(onClick)
         } }>{children}</a>
     )
 };
@@ -75,42 +77,83 @@ const getVisibleTodos = (todos, filter) => {
     }
 };
 
-const Header = ({visibilityFilter, onClickFilter})=> {
+class FilterLink extends Component {
+    componentDidMount() {
+        this.unsubscribe = store.subscribe(()=>
+            this.forceUpdate()
+        )
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
+    render() {
+        const props = this.props;
+        const state = store.getState();
+        return (
+            <Link
+                active={
+                    props.filter === state.visibilityFilter
+                }
+                onClick={()=> {
+                    store.dispatch({
+                        type: 'SET_VISIBILITY_FILTER',
+                        filter: props.children
+                    })
+                }}
+                visibilityFilter={this.props.visibilityFilter}
+            >
+                {props.children}
+            </Link>
+        )
+    }
+}
+
+const Header = ()=> {
     return (
         <p>
-            <FilterLink
-                filter='SHOW_ALL'
-                currentFilter={visibilityFilter}
-                onClickFilter={onClickFilter}
-            > All </FilterLink>
-            <FilterLink
-                filter='SHOW_ACTIVE'
-                currentFilter={visibilityFilter}
-                onClickFilter={onClickFilter}
-            > Active </FilterLink>
-            <FilterLink
-                filter='SHOW_COMPLETED'
-                currentFilter={visibilityFilter}
-                onClickFilter={onClickFilter}
-            > Completed </FilterLink>
+            <FilterLink filter="SHOW_ALL"> All </FilterLink>
+            <FilterLink filter="SHOW_ACTIVE"> Active </FilterLink>
+            <FilterLink filter="SHOW_COMPLETED"> Completed </FilterLink>
         </p>
     )
 };
 
+class VisibleTodoList extends Component {
+    componentDidMount(){
+        this.unsubscribe = store.subscribe(()=>this.forceUpdate())
+    }
+    componentWillUnmount(){
+        this.unsubscribe();
+    }
+    render() {
+        // const props = this.props;
+        const state = store.getState();
+        return (
+            <TodoList
+                todos={
+                    getVisibleTodos(
+                        state.todos,
+                        state.visibilityFilter
+                    )}
+                onClickTodo={id => {
+                    store.dispatch({
+                        type: 'TOGGLE_TODO',
+                        id: id
+                    })
+                }}/>
+        )
+    }
+}
+
 const App = ({
-    visibilityFilter, todos
+
 })=> {
     return (
         <div>
-            <Header
-                visibilityFilter={visibilityFilter}
-                onClickFilter={filter=> {
-                    store.dispatch({
-                        type: 'SET_VISIBILITY_FILTER',
-                        filter
-                    })
-                }}/>
-
+            <Header />
+            <VisibleTodoList />
             <AddTodo onClick={value=> {
                 store.dispatch({
                     type: 'ADD_TODO',
@@ -119,17 +162,7 @@ const App = ({
                 })
             }}/>
 
-            <TodoList
-                todos={getVisibleTodos(
-                    todos,
-                    visibilityFilter
-                )}
-                onClickTodo={id => {
-                    store.dispatch({
-                        type: 'TOGGLE_TODO',
-                        id: id
-                    })
-                }}/>
+
         </div>
     )
 
