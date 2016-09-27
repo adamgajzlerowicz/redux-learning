@@ -8,7 +8,6 @@ const store = createStore(
     todoApp
 );
 
-
 const Todo = ({
     onClick, completed, text
 }) => (
@@ -49,7 +48,7 @@ const Link = ({
     )
 };
 
-const AddTodo = ({onClick}) => {
+const AddTodo = () => {
     let input;
     return (
         <div>
@@ -57,7 +56,11 @@ const AddTodo = ({onClick}) => {
                 input = node;
             }}/>
             <button onClick={() => {
-                onClick(input.value)
+                store.dispatch({
+                    type: 'ADD_TODO',
+                    text: input.value,
+                    id: nextTodoId++
+                })
             } }>Add
             </button>
         </div>
@@ -99,7 +102,7 @@ class FilterLink extends Component {
                 onClick={()=> {
                     store.dispatch({
                         type: 'SET_VISIBILITY_FILTER',
-                        filter: props.children
+                        filter: props.filter
                     })
                 }}
                 visibilityFilter={this.props.visibilityFilter}
@@ -121,14 +124,16 @@ const Header = ()=> {
 };
 
 class VisibleTodoList extends Component {
-    componentDidMount(){
+    componentDidMount() {
         this.unsubscribe = store.subscribe(()=>this.forceUpdate())
     }
-    componentWillUnmount(){
+
+    componentWillUnmount() {
         this.unsubscribe();
     }
+
     render() {
-        // const props = this.props;
+        const props = this.props;
         const state = store.getState();
         return (
             <TodoList
@@ -147,35 +152,20 @@ class VisibleTodoList extends Component {
     }
 }
 
-const App = ({
-
-})=> {
+const App = ({})=> {
     return (
         <div>
             <Header />
+            <AddTodo />
             <VisibleTodoList />
-            <AddTodo onClick={value=> {
-                store.dispatch({
-                    type: 'ADD_TODO',
-                    text: value,
-                    id: nextTodoId++
-                })
-            }}/>
-
-
         </div>
     )
 
 };
 
-
-var render = () => {
-    ReactDom.render(
-        <App {...store.getState()} />,
-        document.getElementById('app')
-    );
-};
-store.subscribe(render);
-render();
+ReactDom.render(
+    <App />,
+    document.getElementById('app')
+);
 
 window.store = store;
