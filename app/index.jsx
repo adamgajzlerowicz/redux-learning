@@ -2,11 +2,10 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import {todoApp} from "./reducers";
 import {createStore, combineReducers} from 'redux';
+import {Provider} from 'react-redux';
 const {Component} = React;
 let nextTodoId = 0;
-const store = createStore(
-    todoApp
-);
+
 
 const Todo = ({
     onClick, completed, text
@@ -48,7 +47,7 @@ const Link = ({
     )
 };
 
-const AddTodo = () => {
+const AddTodo = (props, {store}) => {
     let input;
     return (
         <div>
@@ -67,6 +66,10 @@ const AddTodo = () => {
     )
 };
 
+AddTodo.contextTypes = {
+    store: React.PropTypes.object
+};
+
 const getVisibleTodos = (todos, filter) => {
     switch (filter) {
         case 'SHOW_ACTIVE':
@@ -82,6 +85,7 @@ const getVisibleTodos = (todos, filter) => {
 
 class FilterLink extends Component {
     componentDidMount() {
+        const {store} = this.context;
         this.unsubscribe = store.subscribe(()=>
             this.forceUpdate()
         )
@@ -93,6 +97,7 @@ class FilterLink extends Component {
 
     render() {
         const props = this.props;
+        const {store} = this.context;
         const state = store.getState();
         return (
             <Link
@@ -113,7 +118,11 @@ class FilterLink extends Component {
     }
 }
 
-const Header = ()=> {
+FilterLink.contextTypes = {
+    store: React.PropTypes.object
+};
+
+const Header = ({})=> {
     return (
         <p>
             <FilterLink filter="SHOW_ALL"> All </FilterLink>
@@ -125,6 +134,7 @@ const Header = ()=> {
 
 class VisibleTodoList extends Component {
     componentDidMount() {
+        const {store} = this.context;
         this.unsubscribe = store.subscribe(()=>this.forceUpdate())
     }
 
@@ -134,6 +144,7 @@ class VisibleTodoList extends Component {
 
     render() {
         const props = this.props;
+        const {store} = this.context;
         const state = store.getState();
         return (
             <TodoList
@@ -152,20 +163,25 @@ class VisibleTodoList extends Component {
     }
 }
 
+Provider.childContextTypes = {
+    store: React.PropTypes.object
+};
+VisibleTodoList.contextTypes = {
+    store: React.PropTypes.object
+};
 const App = ({})=> {
     return (
         <div>
-            <Header />
-            <AddTodo />
-            <VisibleTodoList />
+            <Header/>
+            <AddTodo/>
+            <VisibleTodoList/>
         </div>
     )
-
 };
 
 ReactDom.render(
-    <App />,
+    <Provider store={createStore(todoApp)}>
+        <App/>
+    </Provider>,
     document.getElementById('app')
 );
-
-window.store = store;
