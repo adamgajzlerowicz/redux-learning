@@ -20,7 +20,8 @@
     "storybook": "start-storybook -p 9001 -s ./app/public",
     "storybuild": "build-storybook -s ./app/public -o ./.storybook/build",
     "src:summary": "sloc app/",
-    "src:detail": "sloc -d -f cli-table -k total,source,comment app/"
+    "src:detail": "sloc -d -f cli-table -k total,source,comment app/",
+    "start-selenium": "java -jar ./../selenium-server-standalone-2.53.1.jar"
   },
   "author": "Manav Sehgal",
   "license": "MIT",
@@ -39,7 +40,8 @@
     "react-router": "^2.4.0",
     "react-select": "^0.9.1",
     "redux": "^3.5.2",
-    "rumble-charts": "^1.0.7"
+    "rumble-charts": "^1.0.7",
+    "webdriverio": "^4.2.16"
   },
   "devDependencies": {
     "@kadira/storybook": "^1.28.1",
