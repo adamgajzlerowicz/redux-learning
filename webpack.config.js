@@ -1,10 +1,8 @@
 const webpack = require('webpack');
-
-// File ops
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-// Folder ops
 const path = require('path');
+const autoprefixer = require('autoprefixer');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // Constants
 const APP = path.join(__dirname, 'app');
@@ -23,7 +21,11 @@ module.exports = {
         publicPath: '/'
     },
     resolve: {
-        extensions: ['', '.js', '.jsx', '.css']
+        extensions: ['', '.js', '.jsx', '.css', '.scss'],
+        modulesDirectories: [
+            'node_modules',
+            path.resolve(__dirname, './node_modules')
+        ]
     },
     module: {
         loaders: [
@@ -32,11 +34,16 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'babel',
                 query: {
-                    presets: ['react', 'es2015']
+                    presets: ['react', 'es2015', 'stage-0']
                 }
+            },
+            {
+                test: /(\.scss|\.css)$/,
+                loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass')
             }
         ]
     },
+
     devtool: 'eval-source-map',
     // webpack-dev-server configuration
     devServer: {
@@ -53,6 +60,7 @@ module.exports = {
         outputPath: BUILD
     },
     plugins: [
+        new ExtractTextPlugin('bundle.css', { allChunks: true }),
         new HtmlWebpackPlugin({
             template: TEMPLATE,
             // JS placed at the bottom of the body element
