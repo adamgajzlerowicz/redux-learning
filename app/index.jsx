@@ -5,35 +5,16 @@ import {todoApp} from "./reducers";
 import {createStore} from 'redux';
 import {Provider, connect} from 'react-redux';
 import {VisibleMessagesList} from './components/container/VisibleMessagesList';
-import {Option} from './components/presentational/Option';
+import {Filter} from './components/container/Filter';
 import {AppBar, Checkbox, IconButton} from 'react-toolbox';
 import {Layout, NavDrawer, Panel, Sidebar, Dropdown} from 'react-toolbox';
 import 'react-toolbox/lib/commons.scss';
-import {connect} from 'react-redux';
-
-
-const countries = [
-    { value: 'ALL', label: 'all' },
-    { value: 'READ', label: 'read'},
-    { value: 'UNREAD', label: 'unread' },
-];
-
-var value = 'ALL';
-
-
 
 const App = () => {
     return (
         <Layout>
             <Panel>
-                <Dropdown
-                    auto
-                    onChange={(value)=>{
-                        console.log(value);
-                    }}
-                    source={countries}
-                    value={value}
-                />
+                <Filter />
                 <VisibleMessagesList />
             </Panel>
         </Layout>
