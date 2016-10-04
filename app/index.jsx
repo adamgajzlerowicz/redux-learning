@@ -4,23 +4,36 @@ import React from 'react';
 import {todoApp} from "./reducers";
 import {createStore} from 'redux';
 import {Provider, connect} from 'react-redux';
-import {SelectedFilterList} from './components/container/SelectedFilterList';
 import {VisibleMessagesList} from './components/container/VisibleMessagesList';
 import {Option} from './components/presentational/Option';
 import {AppBar, Checkbox, IconButton} from 'react-toolbox';
-import {Layout, NavDrawer, Panel, Sidebar} from 'react-toolbox';
+import {Layout, NavDrawer, Panel, Sidebar, Dropdown} from 'react-toolbox';
 import 'react-toolbox/lib/commons.scss';
+import {connect} from 'react-redux';
 
 
-const App = ()=> {
+const countries = [
+    { value: 'ALL', label: 'all' },
+    { value: 'READ', label: 'read'},
+    { value: 'UNREAD', label: 'unread' },
+];
+
+var value = 'ALL';
+
+
+
+const App = () => {
     return (
         <Layout>
             <Panel>
-                <select>
-                    <Option filter="ALL">all</Option>
-                    <Option filter="READ">read</Option>
-                    <Option filter="UNREAD">unread</Option>
-                </select>
+                <Dropdown
+                    auto
+                    onChange={(value)=>{
+                        console.log(value);
+                    }}
+                    source={countries}
+                    value={value}
+                />
                 <VisibleMessagesList />
             </Panel>
         </Layout>
