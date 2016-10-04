@@ -9,25 +9,13 @@ import {VisibleMessagesList} from './components/container/VisibleMessagesList';
 import {Option} from './components/presentational/Option';
 import {AppBar, Checkbox, IconButton} from 'react-toolbox';
 import {Layout, NavDrawer, Panel, Sidebar} from 'react-toolbox';
-import {Switch} from 'react-toolbox/lib/switch';
-import Dropdown from 'react-toolbox/lib/dropdown';
 import 'react-toolbox/lib/commons.scss';
 
-// const countries = [
-//     {value: 'EN-gb', label: 'England'},
-//     {value: 'ES-es', label: 'Spain'},
-//     {value: 'TH-th', label: 'Thailand'},
-//     {value: 'EN-en', label: 'USA'}
-// ];
 
 const App = ()=> {
     return (
         <Layout>
             <Panel>
-                {/*<Dropdown*/}
-                    {/*source={countries}*/}
-                    {/*value="EN-gb"*/}
-                {/*/>*/}
                 <select>
                     <Option filter="ALL">all</Option>
                     <Option filter="READ">read</Option>
