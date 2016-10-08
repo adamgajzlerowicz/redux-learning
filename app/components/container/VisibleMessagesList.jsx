@@ -3,12 +3,12 @@ import {MessageList} from '../presentational/MessageList';
 
 const getVisibleMessages = (messages, filter) => {
     switch (filter) {
-        case 'SHOW_ALL':
+        case 'ALL':
             return messages;
-        case 'SHOW_READ':
+        case 'READ':
             return messages.filter(t => t.status == 'read');
-        case 'SHOW_UNREAD':
-            return messages.filter(t => !t.completed == 'unread')
+        case 'UNREAD':
+            return messages.filter(t => t.status == 'unread')
     }
 };
 

@@ -1,28 +1,22 @@
 import {connect} from 'react-redux'
 import {Dropdown} from 'react-toolbox';
+import {setVisibilityFilter, VisibilityFilters} from '../../actions';
 
-
-const vals = [
-    {value: 'ALL', label: 'all'},
-    {value: 'READ', label: 'read'},
-    {value: 'UNREAD', label: 'unread'},
-];
-
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     return {
-        source: vals,
-        value: "ALL",
+        source: VisibilityFilters,
+        value: state.visibilityFilter,
     }
-}
+};
 
-const mapDispatchToProps = (dispatch, ownProps) => {
+
+const mapDispatchToProps = (dispatch) => {
     return {
         onChange: (value) => {
-            // dispatch(setVisibilityFilter(ownProps.filter))
-            console.log(value);
+            dispatch(setVisibilityFilter(value))
         }
     }
-}
+};
 
 export const Filter = connect(
     mapStateToProps,
