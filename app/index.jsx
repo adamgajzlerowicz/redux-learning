@@ -1,9 +1,9 @@
 import {render} from 'react-dom'
-import {Router, Route, Link, hashHistory} from 'react-router';
+import {Router, Route, hashHistory} from 'react-router';
 import React from 'react';
 import {todoApp} from "./reducers";
 import {createStore} from 'redux';
-import {Provider, connect} from 'react-redux';
+import {Provider} from 'react-redux';
 import {VisibleMessagesList} from './components/container/VisibleMessagesList';
 import {Filter} from './components/container/Filter';
 import {AppBar, Checkbox, IconButton} from 'react-toolbox';
@@ -59,3 +59,25 @@ render((
         </Router>
     </Provider>
 ), document.getElementById('app'));
+
+var conn = {
+    userName: 'kjsdf',
+    password: 'lksdf',
+    get: (url) => {
+        return new Promise((res) => {
+            fetch(url)
+                .then(function (response) {
+                    res(response.text());
+                })
+        });
+    },
+    post: (url, payload) => {
+        const data = [];
+        return data;
+    }
+};
+
+conn.get('http://localhost:8081').then((result)=> {
+    console.info(result);
+});
+
