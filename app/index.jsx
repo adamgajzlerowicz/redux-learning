@@ -77,7 +77,7 @@ var conn = {
     }
 };
 
-conn.get('http://localhost:8081').then((result)=> {
+conn.get('http://localhost:8081').then(result=> {
     console.info(result);
 });
 
