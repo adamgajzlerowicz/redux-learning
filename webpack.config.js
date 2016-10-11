@@ -65,6 +65,11 @@ module.exports = {
             template: TEMPLATE,
             // JS placed at the bottom of the body element
             inject: 'body'
-        })
+        }),
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+            }
+        }),
     ]
 };

@@ -60,9 +60,14 @@ render((
     </Provider>
 ), document.getElementById('app'));
 
-var conn = {
-    userName: 'kjsdf',
-    password: 'lksdf',
+
+if (process.env.NODE_ENV === 'development') {
+    import {username, password) from './creds';
+}
+const url = ((username && password) ? (username + ':' + password + '@') : '') + document.location.host;
+console.log(url);
+
+export const conn = {
     get: (url) => {
         return new Promise((res) => {
             fetch(url)
