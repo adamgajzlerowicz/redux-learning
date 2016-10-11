@@ -64,21 +64,20 @@ render((
 if (process.env.NODE_ENV === 'development') {
     import {username, password) from './creds';
 }
-const url = ((username && password) ? (username + ':' + password + '@') : '') + document.location.host;
-console.log(url);
+const baseUrl = ((username && password) ? (username + ':' + password + '@') : '') + document.location.host;
+console.log(baseUrl);
 
 export const conn = {
-    get: (url) => {
+    get: (path) => {
         return new Promise((res) => {
-            fetch(url)
+            fetch(baseUrl+path)
                 .then(function (response) {
                     res(response.text());
                 })
         });
     },
-    post: (url, payload) => {
-        const data = [];
-        return data;
+    post: (path, payload) => {
+        //...
     }
 };
 
