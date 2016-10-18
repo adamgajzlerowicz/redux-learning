@@ -9,6 +9,13 @@ import {Filter} from './components/container/Filter';
 import {AppBar, Checkbox, IconButton} from 'react-toolbox';
 import {Layout, NavDrawer, Panel, Sidebar, Dropdown} from 'react-toolbox';
 import 'react-toolbox/lib/commons.scss';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import RaisedButton from 'material-ui/RaisedButton';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
+injectTapEventPlugin();
 
 const App = () => {
     return (
@@ -24,7 +31,7 @@ const App = () => {
 const About = () => {
     return (
         <div>
-            about
+            <RaisedButton label="Default" />
         </div>
     )
 };
@@ -48,40 +55,24 @@ let initalState = {
         }
     ]
 };
+const muiTheme = getMuiTheme({
+    cxc: {
+        backgroundColor: 'red',
+    },
+});
+
+
+
 
 let store = createStore(todoApp, initalState);
 window.store = store;
 render((
     <Provider store={store}>
-        <Router history={hashHistory}>
-            <Route path="/" component={App}/>
-            <Route path="/about" component={About}/>
-        </Router>
+        <MuiThemeProvider muiTheme={muiTheme}>
+            <Router history={hashHistory}>
+                <Route path="/" component={App}/>
+                <Route path="/material" component={About}/>
+            </Router>
+        </MuiThemeProvider>
     </Provider>
 ), document.getElementById('app'));
-
-
-if (process.env.NODE_ENV === 'development') {
-    import {username, password) from './creds';
-}
-const baseUrl = ((username && password) ? (username + ':' + password + '@') : '') + document.location.host;
-console.log(baseUrl);
-
-export const conn = {
-    get: (path) => {
-        return new Promise((res) => {
-            fetch(baseUrl+path)
-                .then(function (response) {
-                    res(response.text());
-                })
-        });
-    },
-    post: (path, payload) => {
-        //...
-    }
-};
-
-conn.get('http://localhost:8081').then(result=> {
-    console.info(result);
-});
-

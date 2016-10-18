@@ -2,7 +2,6 @@ import React from 'react';
 import {Message} from './Message';
 
 export const MessageList = ({messages, onClick}) => {
-    //noinspection BadExpressionStatementJS
     return (
         <div>
             <ul>

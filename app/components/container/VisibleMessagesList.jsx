@@ -14,7 +14,8 @@ const getVisibleMessages = (messages, filter) => {
 
 const mapStateToProps = (state) => {
     return {
-        messages: getVisibleMessages(state.messages, state.visibilityFilter)
+        messages: getVisibleMessages(state.messages, state.visibilityFilter),
+        customerStyles: state.customerStyles
     }
 };
 
