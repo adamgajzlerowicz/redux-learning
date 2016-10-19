@@ -56,17 +56,13 @@ const muiTheme = getMuiTheme({
 });
 
 
-
-
 let store = createStore(todoApp, initalState);
 window.store = store;
 render((
     <Provider store={store}>
-        <MuiThemeProvider muiTheme={muiTheme}>
-            <Router history={hashHistory}>
-                <Route path="/" component={App}/>
-                <Route path="/about" component={About}/>
-            </Router>
-        </MuiThemeProvider>
+        <Router history={hashHistory}>
+            <Route path="/" component={App}/>
+            <Route path="/about" component={About}/>
+        </Router>
     </Provider>
 ), document.getElementById('app'));

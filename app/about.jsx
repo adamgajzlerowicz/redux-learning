@@ -2,17 +2,21 @@ import {render} from 'react-dom'
 import React from 'react';
 import {Item} from './components/presentational/Item';
 import {ThemeProvider} from 'react-css-themr';
-import style from './theme/ItemDefault.scss';
+import inlineCss from './about.scss';
 
 const contextTheme = {
-    Item: require('./theme/ItemVendor.scss'),
+    myItemName: require('./theme/ItemVendor.scss'),
 };
 
 const About = () => {
     return (
-        <ThemeProvider theme={contextTheme}>
-            <Item theme={contextTheme} className={style.button}/>
-        </ThemeProvider>
+        <div>
+            <Item />
+            <ThemeProvider theme={contextTheme}>
+                <Item />
+            </ThemeProvider>
+            <Item theme={inlineCss} />
+        </div>
     )
 };
 
