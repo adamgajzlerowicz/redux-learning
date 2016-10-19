@@ -14,6 +14,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import About from './about';
 
 injectTapEventPlugin();
 
@@ -28,13 +29,6 @@ const App = () => {
     )
 };
 
-const About = () => {
-    return (
-        <div>
-            <RaisedButton label="Default" />
-        </div>
-    )
-};
 
 let initalState = {
     messages: [
@@ -71,7 +65,7 @@ render((
         <MuiThemeProvider muiTheme={muiTheme}>
             <Router history={hashHistory}>
                 <Route path="/" component={App}/>
-                <Route path="/material" component={About}/>
+                <Route path="/about" component={About}/>
             </Router>
         </MuiThemeProvider>
     </Provider>
